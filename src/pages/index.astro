@@ -1,11 +1,23 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Header from '../components/Header.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import AboutSection from '../components/AboutSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title="Skyline Excavating | Professional Excavation Services"
+	description="Reliable excavation, demolition, grading, and haul-off services delivered with clean project organization and clear communication."
+>
+	<Header />
+	<main>
+		<HeroSection />
+		<ServicesSection />
+		<AboutSection />
+		<ContactSection />
+	</main>
+	<SiteFooter />
 </Layout>
