@@ -1,11 +1,5 @@
 ---
 const communities = ['Red Deer', 'Lacombe', 'Ponoka', 'Wetaskiwin', 'Leduc', 'Edmonton'];
-const projectTypes = [
-	'Residential excavation and grading',
-	'Foundation prep and footing digs',
-	'Driveway removal and replacement prep',
-	'Concrete breaking, demolition, and haul-off',
-];
 ---
 
 <section id="service-area" class="bg-white py-16 sm:py-20">
@@ -32,17 +26,6 @@ const projectTypes = [
 					{
 						communities.map((community) => (
 							<li>{community}</li>
-						))
-					}
-				</ul>
-			</div>
-
-			<div class="rounded-xl border border-slate-200 bg-canvas p-6 shadow-card">
-				<h3 class="text-lg font-semibold text-slate-900">Projects we help move forward</h3>
-				<ul class="mt-4 space-y-2 text-sm leading-relaxed text-slate-600">
-					{
-						projectTypes.map((projectType) => (
-							<li>{projectType}</li>
 						))
 					}
 				</ul>
