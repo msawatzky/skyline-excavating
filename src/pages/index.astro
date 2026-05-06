@@ -1,24 +1,68 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
+import StickySectionNav from '../components/StickySectionNav.astro';
 import HeroSection from '../components/HeroSection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
 import AboutSection from '../components/AboutSection.astro';
 import WorkGallerySection from '../components/WorkGallerySection.astro';
+import ServiceAreaSection from '../components/ServiceAreaSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+
+const structuredData = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'LocalBusiness',
+		name: 'Skyline Excavating',
+		description:
+			'Owner-operated excavation company serving homeowners, builders, and property managers with excavation, grading, demolition, augering, foundations, driveway removal, and haul-off services from Red Deer to Edmonton.',
+		telephone: '+1-403-704-5776',
+		areaServed: [
+			{ '@type': 'City', name: 'Red Deer' },
+			{ '@type': 'City', name: 'Lacombe' },
+			{ '@type': 'City', name: 'Ponoka' },
+			{ '@type': 'City', name: 'Wetaskiwin' },
+			{ '@type': 'City', name: 'Leduc' },
+			{ '@type': 'City', name: 'Edmonton' },
+		],
+		serviceType: [
+			'Excavation',
+			'Grading',
+			'Demolition',
+			'Augering',
+			'Foundations',
+			'Driveway Removal',
+			'Dirt Removal',
+			'Concrete Breaking and Hauling',
+		],
+		sameAs: [
+			'https://www.facebook.com/profile.php?id=61556821959284',
+			'https://www.instagram.com/skyline.excavating/',
+		],
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'Skyline Excavating',
+		description: 'Excavation services for communities between Red Deer and Edmonton.',
+	},
+];
 ---
 
 <Layout
-	title="Skyline Excavating | Professional Excavation Services"
-	description="Reliable excavation, demolition, grading, and haul-off services delivered with clean project organization and clear communication."
+	title="Skyline Excavating | Excavation Services from Red Deer to Edmonton"
+	description="Owner-operated excavation, grading, demolition, augering, and haul-off services for homeowners, builders, and property managers across Central Alberta, from Red Deer to Edmonton."
+	structuredData={structuredData}
 >
 	<Header />
+	<StickySectionNav />
 	<main>
 		<HeroSection />
 		<ServicesSection />
 		<AboutSection />
 		<WorkGallerySection />
+		<ServiceAreaSection />
 		<ContactSection />
 	</main>
 	<SiteFooter />

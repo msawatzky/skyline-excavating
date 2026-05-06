@@ -1,0 +1,137 @@
+---
+/** `labelNarrow` is shown below the `sm` breakpoint so every tab fits on one row on small phones */
+const sectionLinks = [
+	{ href: '#services', label: 'Services' },
+	{ href: '#about', label: 'About' },
+	{ href: '#recent-work', label: 'Recent Work', labelNarrow: 'Photos' },
+	{ href: '#service-area', label: 'Service Area', labelNarrow: 'Areas' },
+	{ href: '#contact', label: 'Contact' },
+] as const;
+---
+
+<nav
+	id="section-nav"
+	aria-label="Page sections"
+	class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-sm supports-[backdrop-filter]:bg-white/80"
+>
+	<div class="mx-auto w-full max-w-6xl px-1 max-[420px]:px-0 sm:px-6 lg:px-8">
+		<ul class="-mb-px flex w-full flex-nowrap items-stretch justify-between gap-0 md:justify-start md:gap-0">
+			{
+				sectionLinks.map((link) => (
+					<li class="flex min-w-0 flex-1 md:flex-none md:shrink-0">
+						<a
+							href={link.href}
+							data-section-link
+							class="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap border-b-2 border-transparent px-0 py-1 text-center text-sm font-normal leading-normal tracking-normal text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:px-2 sm:py-2.5 md:inline-flex md:w-auto md:flex-none md:justify-start md:px-4 max-[340px]:text-xs max-[340px]:leading-tight max-[340px]:tracking-tight"
+						>
+							{
+								'labelNarrow' in link && link.labelNarrow ? (
+									<>
+										<span class="sm:hidden">{link.labelNarrow}</span>
+										<span class="hidden sm:inline">{link.label}</span>
+									</>
+								) : (
+									link.label
+								)
+							}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</nav>
+
+<script>
+	const links = Array.from(document.querySelectorAll('a[data-section-link]'));
+
+	/** Sections in nav order — must match anchors on the page and reading order top-to-bottom */
+	const sections = [];
+	for (const link of links) {
+		const hash = link.getAttribute('href');
+		if (!hash?.startsWith('#')) continue;
+		const el = document.querySelector(hash);
+		if (el) sections.push({ el, link });
+	}
+
+	const navBar = document.getElementById('section-nav');
+
+	/** Y from viewport top: section headings pass this line when they're "current". Uses the lower edge of sticky chrome (header + submenu), even when they overlap. */
+	const getActivationOffset = () => {
+		let chromeBottom = 0;
+		const header = document.querySelector('header');
+		if (header instanceof HTMLElement)
+			chromeBottom = Math.max(chromeBottom, header.getBoundingClientRect().bottom);
+		if (navBar instanceof HTMLElement) chromeBottom = Math.max(chromeBottom, navBar.getBoundingClientRect().bottom);
+		return Math.round(chromeBottom + 6);
+	};
+
+	const setActiveLink = (activeLink) => {
+		for (const link of links) {
+			const isActive = Boolean(activeLink) && link === activeLink;
+			link.setAttribute('aria-current', isActive ? 'location' : 'false');
+			link.classList.toggle('border-primary', isActive);
+			link.classList.toggle('border-transparent', !isActive);
+			link.classList.toggle('text-slate-900', isActive);
+			link.classList.toggle('font-medium', isActive);
+			link.classList.toggle('text-slate-500', !isActive);
+		}
+	};
+
+	const scrollActiveAnchorIntoTabs = () => {
+		const activeEl = links.find((link) => link.getAttribute('aria-current') === 'location');
+		if (!activeEl) return;
+		activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+	};
+
+	const updateFromScroll = () => {
+		if (sections.length === 0) return;
+
+		const activationY = getActivationOffset();
+		const scrollBottom = Math.ceil(window.scrollY + window.innerHeight);
+		const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+		let activeLink = null;
+
+		// Prefer last section once user reaches bottom (short footer / last section taller than viewport)
+		if (scrollBottom >= docHeight - 4) {
+			activeLink = sections[sections.length - 1]?.link ?? null;
+		} else {
+			for (const { el, link } of sections) {
+				const top = el.getBoundingClientRect().top;
+				if (top <= activationY) activeLink = link;
+			}
+			// Before first anchor crosses the activation line (e.g. hero): no highlighted tab
+		}
+
+		setActiveLink(activeLink);
+	};
+
+	let ticking = false;
+	const onScrollOrResize = () => {
+		if (!ticking) {
+			requestAnimationFrame(() => {
+				updateFromScroll();
+				ticking = false;
+			});
+			ticking = true;
+		}
+	};
+
+	if (sections.length > 0) {
+		window.addEventListener('scroll', onScrollOrResize, { passive: true });
+		window.addEventListener('resize', onScrollOrResize);
+		updateFromScroll();
+
+		links.forEach((link) =>
+			link.addEventListener(
+				'click',
+				() =>
+					queueMicrotask(() => {
+						updateFromScroll();
+						scrollActiveAnchorIntoTabs();
+					}),
+				{ passive: true }
+			)
+		);
+	}
+</script>
