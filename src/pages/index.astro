@@ -9,49 +9,16 @@ import WorkGallerySection from '../components/WorkGallerySection.astro';
 import ServiceAreaSection from '../components/ServiceAreaSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { buildStructuredData, SITE_DESCRIPTION, SITE_NAME } from '../data/site';
 
-const structuredData = [
-	{
-		'@context': 'https://schema.org',
-		'@type': 'LocalBusiness',
-		name: 'Skyline Excavating',
-		description:
-			'Owner-operated excavation company serving homeowners, builders, and property managers with excavation, grading, demolition, augering, foundations, driveway removal, and haul-off services across Central Alberta.',
-		telephone: '+1-403-704-5776',
-		areaServed: [
-			{ '@type': 'City', name: 'Red Deer' },
-			{ '@type': 'City', name: 'Lacombe' },
-			{ '@type': 'City', name: 'Ponoka' },
-			{ '@type': 'City', name: 'Wetaskiwin' },
-			{ '@type': 'City', name: 'Leduc' },
-			{ '@type': 'City', name: 'Edmonton' },
-		],
-		serviceType: [
-			'Excavation',
-			'Backfilling',
-			'Grading',
-			'Driveways',
-			'Demolition',
-			'Driveway Removal',
-			'Augering & Piles',
-		],
-		sameAs: [
-			'https://www.facebook.com/profile.php?id=61556821959284',
-			'https://www.instagram.com/skyline.excavating/',
-		],
-	},
-	{
-		'@context': 'https://schema.org',
-		'@type': 'WebSite',
-		name: 'Skyline Excavating',
-		description: 'Excavation services for communities across Central Alberta.',
-	},
-];
+const structuredData = buildStructuredData();
+const pageTitle = `${SITE_NAME} | Excavation & Grading in Central Alberta`;
 ---
 
 <Layout
-	title="Skyline Excavating | Excavation Services in Central Alberta"
-	description="Owner-operated excavation, grading, demolition, augering, site & slab prep and pilings services for homeowners, builders, and property managers across Central Alberta."
+	title={pageTitle}
+	description={SITE_DESCRIPTION}
+	image="/images/excavation.jpg"
 	structuredData={structuredData}
 >
 	<Header />

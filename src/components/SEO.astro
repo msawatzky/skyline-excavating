@@ -8,10 +8,13 @@ interface Props {
   noindex?: boolean;
 }
 
+import { SITE_NAME, SITE_URL } from '../data/site';
+
 const { title, description, canonical, image, structuredData, noindex = false } = Astro.props;
-const siteName = 'Skyline Excavating';
-const resolvedCanonical = canonical ?? (Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined);
-const resolvedImage = image ? (Astro.site ? new URL(image, Astro.site).toString() : image) : undefined;
+const siteName = SITE_NAME;
+const resolvedCanonical = canonical ?? (Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : `${SITE_URL}${Astro.url.pathname}`);
+const defaultImage = '/images/excavation.jpg';
+const resolvedImage = new URL(image ?? defaultImage, Astro.site ?? SITE_URL).toString();
 const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow';
 ---
 
@@ -23,12 +26,12 @@ const robotsContent = noindex ? 'noindex, nofollow' : 'index, follow';
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 {resolvedCanonical && <meta property="og:url" content={resolvedCanonical} />}
-{resolvedImage && <meta property="og:image" content={resolvedImage} />}
+<meta property="og:image" content={resolvedImage} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{resolvedImage && <meta name="twitter:image" content={resolvedImage} />}
-{resolvedCanonical && <link rel="canonical" href={resolvedCanonical} />}
+<meta name="twitter:image" content={resolvedImage} />
+<link rel="canonical" href={resolvedCanonical} />
 {
   structuredData && (
     <script
